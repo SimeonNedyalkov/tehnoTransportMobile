@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Button,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -14,22 +13,32 @@ import {
 } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
+import axios from "axios";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const navigation = useNavigation();
-
+  const LOGINURL = "http://10.0.2.2:3000/user/login";
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
-  const handleLogin = () => {
-    console.log("hello");
-    router.replace("/(tabs)/dashboard");
-    // navigation.navigate("Dashboard")
-    // navigation.navigate("Dashboard");
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(LOGINURL, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      console.log(response);
+      router.replace("/(tabs)/dashboard");
+    } catch (error: any) {
+      console.error("Login failed:", error.response?.data || error.message);
+    }
   };
 
   return (
