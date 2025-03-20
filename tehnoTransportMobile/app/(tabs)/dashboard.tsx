@@ -10,39 +10,32 @@ import { Checkbox } from "react-native-paper";
 import Customer from "../interfaces/Customer";
 import * as SMS from "expo-sms";
 import { useLocalSearchParams } from "expo-router";
+import Message from "../interfaces/Message";
+import { Timestamp } from "firebase/firestore";
+import useGetCustomer from "../hooks/useGetCustomer";
 export default function DashboardScreen() {
+  const DATA = useGetCustomer();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<Customer[]>([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [newMessage, setNewMessage] = useState("My sample HelloWorld message!");
-  const { message } = useLocalSearchParams();
+  const [newMessage, setNewMessage] = useState(
+    "Здравейте, \nна [date] Ви изтича Годишният Технически Преглед на кола с регистрационен номер : '[regNumber]', моля запишете си час преди датата на изтичане на прегледа за да използвате нашата отстъпка от 5%"
+  );
+  // const { message } = useLocalSearchParams();
   const IPDBURL = "http://192.168.1.6:3000/due-soon-customers";
+  const IPMessageURL = "http://192.168.1.6:3000/message/";
+
   useEffect(() => {
-    if (message && typeof message === "string") {
-      console.log(message);
-      setNewMessage(message);
+    if (DATA.length !== customers.length) {
+      setCustomers(DATA);
     }
-  }, [message]);
-  useEffect(() => {
-    const useGetCustomers = async () => {
-      try {
-        let response = await fetch(IPDBURL, {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!response.ok) {
-          const errorResponse = await response.text();
-          console.log("Error response:", errorResponse);
-          return;
-        }
-        const customersData = await response.json();
-        setCustomers(customersData);
-      } catch (error) {
-        console.log("Fetch failed", error);
-      }
-    };
-    useGetCustomers();
-  }, []);
+  }, [DATA]);
+
+  // useEffect(() => {
+  //   if (message.length != 0) {
+  //     setNewMessage(JSON.stringify(message));
+  //   }
+  // }, [message]);
 
   const handleSelectCustomer = (customer: Customer) => {
     setSelectedCustomers((prev) => {
@@ -70,13 +63,27 @@ export default function DashboardScreen() {
       );
       const isAvailable = await SMS.isAvailableAsync();
       if (isAvailable) {
-        alert("Sms is available on this device");
-        const { result } = await SMS.sendSMSAsync(phonesArray, newMessage);
-        if (result === "sent") {
-          alert("Message sent successfully");
-        } else {
-          alert("Message sent failed");
+        alert("SMS is available on this device");
+
+        // Loop through each phone number and send SMS individually
+        for (let customer of selectedCustomers) {
+          // Replace placeholders with actual customer data
+
+          const personalizedMessage = newMessage
+            .replace("[regNumber]", customer.regNumber)
+            .replace("[date]", customer.dateOfTehnoTest.toString());
+          const { result } = await SMS.sendSMSAsync(
+            customer.phone,
+            personalizedMessage
+          );
+          if (result === "sent") {
+            console.log(`Message sent to ${customer.phone}`);
+          } else {
+            console.log(`Failed to send message to ${customer.phone}`);
+          }
         }
+
+        alert("Messages sent successfully to selected customers");
       } else {
         alert("Misfortune... there's no SMS available on this device");
       }
