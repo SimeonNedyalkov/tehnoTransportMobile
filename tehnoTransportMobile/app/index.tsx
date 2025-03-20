@@ -14,12 +14,13 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
 import axios from "axios";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const navigation = useNavigation();
-  const LOGINURL = "http://10.0.2.2:3000/user/login";
+  const SIMULATORLOGINURL = "http://10.0.2.2:3000/user/login";
+  const IPLOGINURL = "http://192.168.1.6:3000/user/login";
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -27,13 +28,13 @@ const LoginScreen = () => {
   };
   const handleLogin = async () => {
     try {
-      const response = await fetch(LOGINURL, {
+      const response = await fetch(IPLOGINURL, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
+      await AsyncStorage.setItem("user", JSON.stringify(response));
       console.log(response);
       router.replace("/(tabs)/dashboard");
     } catch (error: any) {
@@ -46,7 +47,7 @@ const LoginScreen = () => {
       <Text style={styles.title}>Welcome to Tehno Transport</Text>
 
       <Image
-        source={require("../../assets/carLogo/abs5_csod_210125.jpg")}
+        source={require("./../assets/carLogo/abs5_csod_210125.jpg")}
         style={styles.logoIcon}
       />
 
