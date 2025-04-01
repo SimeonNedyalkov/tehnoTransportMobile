@@ -28,27 +28,27 @@ export default function useGetCustomer() {
         const data = await response.json();
 
         const filteredData: Customer[] = data.map((customer: any) => {
-          const date = new Date(customer.dateOfTehnoTest.seconds * 1000);
-          const localDate = new Date(
-            date.getTime() - date.getTimezoneOffset() * 60000
-          );
-          let testDate: Date;
-          if (customer.dateOfTehnoTest instanceof Timestamp) {
-            // If it's a Firebase Timestamp
-            testDate = customer.dateOfTehnoTest.toDate();
-          } else if (customer.dateOfTehnoTest instanceof Date) {
-            // If it's already a Date object
-            testDate = customer.dateOfTehnoTest;
-          } else {
-            // If it's an object with seconds and nanoseconds (common in Firestore documents)
-            testDate = new Date(customer.dateOfTehnoTest.seconds * 1000);
-          }
+          // const date = new Date(customer.dateOfTehnoTest.seconds * 1000);
+          // const localDate = new Date(
+          //   date.getTime() - date.getTimezoneOffset() * 60000
+          // );
+          // let testDate: Date;
+          // if (customer.dateOfTehnoTest instanceof Timestamp) {
+          //   // If it's a Firebase Timestamp
+          //   testDate = customer.dateOfTehnoTest.toDate();
+          // } else if (customer.dateOfTehnoTest instanceof Date) {
+          //   // If it's already a Date object
+          //   testDate = customer.dateOfTehnoTest;
+          // } else {
+          //   // If it's an object with seconds and nanoseconds (common in Firestore documents)
+          //   testDate = new Date(customer.dateOfTehnoTest.seconds * 1000);
+          // }
 
           return {
             id: customer.id,
             brand: customer.brand,
             createdAt: customer.createdAt,
-            dateOfTehnoTest: localDate.toISOString().split("T")[0],
+            dateOfTehnoTest: customer.dateOfTehnoTest,
             firstName: customer.firstName,
             model: customer.model,
             phone: String(customer.phone),
