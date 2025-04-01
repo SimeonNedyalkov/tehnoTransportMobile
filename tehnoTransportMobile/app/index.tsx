@@ -35,16 +35,21 @@ const LoginScreen = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      if (response.status == 200 || response.status == 201) {
-        await AsyncStorage.setItem("user", JSON.stringify(response));
-        console.log(response);
-        router.replace("/(tabs)/dashboard");
-      } else {
-        alert(response.status);
+
+      const data = await response.json(); // Extract response JSON
+
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid credentials");
       }
-    } catch (error: any) {
-      console.error("Login failed:", error.response?.data || error.message);
-      setErrors((prev) => !prev);
+
+      // Store user data securely
+      await AsyncStorage.setItem("user", JSON.stringify(data));
+
+      console.log("Login successful:", data);
+      router.replace("/(tabs)/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      setErrors(true);
     }
   };
 
@@ -56,7 +61,11 @@ const LoginScreen = () => {
         source={require("./../assets/carLogo/abs5_csod_210125.jpg")}
         style={styles.logoIcon}
       />
-      {errors ? <Text>Hi</Text> : <></>}
+      {errors ? (
+        <Text style={styles.error}>Invalid Username or Password !!!</Text>
+      ) : (
+        <></>
+      )}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -117,6 +126,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: wp("4%"),
     backgroundColor: "#fff",
+  },
+  error: {
+    color: "#D20103",
   },
   title: {
     fontSize: wp("6%"),
