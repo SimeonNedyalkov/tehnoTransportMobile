@@ -12,9 +12,14 @@ import * as SMS from "expo-sms";
 import { useLocalSearchParams } from "expo-router";
 import Message from "../interfaces/Message";
 import { Timestamp } from "firebase/firestore";
+import { NativeModules } from "react-native";
+
+const { SmsSender } = NativeModules;
+import { MaterialIcons } from "@expo/vector-icons";
 import useGetCustomer from "../hooks/useGetCustomer";
 export default function DashboardScreen() {
-  const DATA = useGetCustomer();
+  const [refreshSignal, setRefreshSignal] = useState(false);
+  const DATA = useGetCustomer(refreshSignal);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<Customer[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -30,6 +35,12 @@ export default function DashboardScreen() {
       setCustomers(DATA);
     }
   }, [DATA]);
+
+  const handleRefresh = () => {
+    setSelectedCustomers([]);
+    setSelectAll(false);
+    setRefreshSignal((prev) => !prev);
+  };
 
   // useEffect(() => {
   //   if (message.length != 0) {
@@ -91,11 +102,25 @@ export default function DashboardScreen() {
     setSelectedCustomers([]);
     setSelectAll(false);
   };
+  // const sendSms = (phoneNumbers, message) => {
+  //   const phonesArray = selectedCustomers.map((customer) =>
+  //     String(customer.phone)
+  //   );
+  //   SmsSender.sendBulkSms(phoneNumbers, message,
+  //     (successMessage:any) => {
+  //       console.log(successMessage); // "SMS sent successfully"
+  //     },
+  //     (errorMessage:any) => {
+  //       console.error(errorMessage); // Error sending SMS
+  //     }
+  //   );
+  // };
 
   const renderCustomer = ({ item }: { item: Customer }) => {
     return (
       <View style={styles.customerRow}>
         <Checkbox
+          color="#28A745"
           status={
             selectedCustomers.some((c) => c.id === item.id)
               ? "checked"
@@ -117,8 +142,18 @@ export default function DashboardScreen() {
         <Checkbox
           status={selectAll ? "checked" : "unchecked"}
           onPress={handleSelectAll}
+          color="#28A745"
         />
         <Text style={styles.customerText}>Select All</Text>
+        <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+          <MaterialIcons name="refresh" size={24} color="#007bff" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.tableHeader}>
+        <Text style={[styles.customerText, styles.headerText]}>Name</Text>
+        <Text style={[styles.customerText, styles.headerText]}>Reg Number</Text>
+        <Text style={[styles.customerText, styles.headerText]}>Phone</Text>
       </View>
       <FlatList
         data={customers}
@@ -147,7 +182,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   table: {
-    marginTop: 20,
     width: "100%",
   },
   customerRow: {
@@ -178,5 +212,25 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  tableHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    backgroundColor: "#e0e0e0",
+    borderBottomWidth: 1,
+    borderBottomColor: "#bbb",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  headerText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    flex: 1,
+    textAlign: "center",
+  },
+  refreshButton: {
+    marginRight: 10,
+    padding: 5,
   },
 });

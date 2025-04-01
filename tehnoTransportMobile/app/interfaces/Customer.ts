@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export default interface Customer {
+interface Customer {
   id: string;
   brand: string | "Unknown Brand";
   createdAt?: Timestamp | Date;
@@ -13,3 +13,4 @@ export default interface Customer {
   daysRemaining?: number;
   checked?: false;
 }
+export default Customer;

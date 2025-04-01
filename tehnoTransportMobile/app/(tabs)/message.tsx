@@ -14,78 +14,118 @@ export default function MessageScreen() {
   const router = useRouter();
 
   const saveMessage = () => {
-    router.push({
-      pathname: "/dashboard",
-      params: { message },
-    });
+    router.push({ pathname: "/dashboard", params: { message } });
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Type your new message below:</Text>
-      <SafeAreaProvider style={styles.boxss}>
-        <SafeAreaView>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeMessage}
-            value={message}
-            placeholder="Type here"
-            placeholderTextColor="#999"
-            keyboardType="default"
-            multiline={true}
-            numberOfLines={4}
-          />
-        </SafeAreaView>
-      </SafeAreaProvider>
-      <TouchableOpacity style={styles.button} onPress={saveMessage}>
-        <Text style={styles.buttonText}>Save Text</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaProvider style={styles.safeContainer}>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Type your new message below:</Text>
+
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeMessage}
+          value={message}
+          placeholder="Type here..."
+          placeholderTextColor="#888"
+          keyboardType="default"
+          multiline
+          numberOfLines={4}
+        />
+
+        <View style={styles.warningContainer}>
+          <Text style={styles.important}>Важно !!!</Text>
+          <Text style={styles.noteText}>
+            Ако искате да промените текста: За да добавите динамично дата и
+            регистрационен номер, моля използвайте следните променливи : {"\n"}
+            Дата:
+            <Text style={styles.highlight}> [date] </Text>,{"\n"} Регистрационен
+            номер:
+            <Text style={styles.highlight}> [regNumber] </Text>
+          </Text>
+          <Text style={styles.important}>Важно !!!</Text>
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={saveMessage}>
+          <Text style={styles.buttonText}>Save Text</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "#f9f9f9",
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
-    paddingTop: 50,
-    backgroundColor: "#f5f5f5",
+    padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#333",
-  },
-  boxss: {
-    paddingTop: 50,
+    textAlign: "center",
   },
   input: {
-    minWidth: "95%",
-    maxWidth: "95%",
+    width: "100%",
     minHeight: 120,
-    maxHeight: 450,
-    marginBottom: 20,
-    padding: 12,
+    padding: 15,
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 10,
+    borderRadius: 12,
     fontSize: 16,
     textAlignVertical: "top",
     backgroundColor: "#fff",
-  },
-  button: {
-    backgroundColor: "#6200EE",
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    elevation: 4, // For Android shadow
-    shadowColor: "#000", // For iOS shadow
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+  },
+  warningContainer: {
+    backgroundColor: "#fff3cd",
+    borderRadius: 12,
+    padding: 15,
+    marginVertical: 15,
+    width: "100%",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ffecb5",
+  },
+  important: {
+    textAlign: "center",
+    fontSize: 18,
+    color: "#D32F2F",
+    fontWeight: "bold",
+    marginBottom: 5,
+    marginTop: 5,
+  },
+  noteText: {
+    fontSize: 14,
+    color: "#555",
+    textAlign: "center",
+    paddingHorizontal: 10,
+  },
+  highlight: {
+    fontWeight: "bold",
+    color: "#007AFF",
+  },
+  button: {
+    backgroundColor: "#007AFF",
+    paddingVertical: 14,
+    paddingHorizontal: 35,
+    borderRadius: 25,
+    marginTop: 20,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   buttonText: {
     color: "#fff",

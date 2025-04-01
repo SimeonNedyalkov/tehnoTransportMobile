@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Entypo from "@expo/vector-icons/Entypo";
-
+import AntDesign from "@expo/vector-icons/AntDesign";
 export default function _Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -68,7 +68,17 @@ export default function _Layout() {
           ),
         }}
       />
-
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarLabel: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Entypo name="user" size={size} color={color} />
+          ),
+        }}
+      />
       {/* Explicitly hide the index screen from Tabs */}
       <Tabs.Screen
         name="index"

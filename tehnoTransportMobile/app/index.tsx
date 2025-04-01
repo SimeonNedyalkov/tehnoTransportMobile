@@ -22,6 +22,7 @@ const LoginScreen = () => {
   const SIMULATORLOGINURL = "http://10.0.2.2:3000/user/login";
   const IPLOGINURL = "http://192.168.1.6:3000/user/login";
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [errors, setErrors] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -39,6 +40,7 @@ const LoginScreen = () => {
       router.replace("/(tabs)/dashboard");
     } catch (error: any) {
       console.error("Login failed:", error.response?.data || error.message);
+      setErrors((prev) => !prev);
     }
   };
 
@@ -50,7 +52,7 @@ const LoginScreen = () => {
         source={require("./../assets/carLogo/abs5_csod_210125.jpg")}
         style={styles.logoIcon}
       />
-
+      {errors ? <Text>Hi</Text> : <></>}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
