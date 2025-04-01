@@ -35,9 +35,13 @@ const LoginScreen = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      await AsyncStorage.setItem("user", JSON.stringify(response));
-      console.log(response);
-      router.replace("/(tabs)/dashboard");
+      if (response.status == 200 || response.status == 201) {
+        await AsyncStorage.setItem("user", JSON.stringify(response));
+        console.log(response);
+        router.replace("/(tabs)/dashboard");
+      } else {
+        alert(response.status);
+      }
     } catch (error: any) {
       console.error("Login failed:", error.response?.data || error.message);
       setErrors((prev) => !prev);

@@ -20,32 +20,34 @@ export default function MessageScreen() {
   return (
     <SafeAreaProvider style={styles.safeContainer}>
       <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Type your new message below:</Text>
+        <SafeAreaView style={styles.containerWrapper}>
+          <Text style={styles.title}>Type your new message below:</Text>
 
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeMessage}
-          value={message}
-          placeholder="Type here..."
-          placeholderTextColor="#888"
-          keyboardType="default"
-          multiline
-          numberOfLines={4}
-        />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeMessage}
+            value={message}
+            placeholder="Type here..."
+            placeholderTextColor="#888"
+            keyboardType="default"
+            multiline
+            numberOfLines={4}
+          />
 
-        <View style={styles.warningContainer}>
-          <Text style={styles.important}>Важно !!!</Text>
-          <Text style={styles.noteText}>
-            Ако искате да промените текста: За да добавите динамично дата и
-            регистрационен номер, моля използвайте следните променливи : {"\n"}
-            Дата:
-            <Text style={styles.highlight}> [date] </Text>,{"\n"} Регистрационен
-            номер:
-            <Text style={styles.highlight}> [regNumber] </Text>
-          </Text>
-          <Text style={styles.important}>Важно !!!</Text>
-        </View>
-
+          <View style={styles.warningContainer}>
+            <Text style={styles.important}>🔥🔥🔥 Важно !!! 🔥🔥🔥</Text>
+            <Text style={styles.noteText}>
+              Ако искате да промените текста: За да добавите динамично дата и
+              регистрационен номер, моля използвайте следните променливи :{" "}
+              {"\n"}
+              Дата:
+              <Text style={styles.highlight}> [date] </Text>,{"\n"}{" "}
+              Регистрационен номер:
+              <Text style={styles.highlight}> [regNumber] </Text>
+            </Text>
+            <Text style={styles.important}>🔥🔥🔥 Важно !!! 🔥🔥🔥</Text>
+          </View>
+        </SafeAreaView>
         <TouchableOpacity style={styles.button} onPress={saveMessage}>
           <Text style={styles.buttonText}>Save Text</Text>
         </TouchableOpacity>
@@ -65,7 +67,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  containerWrapper: {
+    height: "90%",
+  },
   title: {
+    marginTop: 20,
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 20,
@@ -74,7 +80,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
-    minHeight: 120,
+    minWidth: "100%",
+    minHeight: 150,
     padding: 15,
     borderWidth: 1,
     borderColor: "#ccc",
@@ -99,14 +106,14 @@ const styles = StyleSheet.create({
   },
   important: {
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 20,
     color: "#D32F2F",
     fontWeight: "bold",
     marginBottom: 5,
     marginTop: 5,
   },
   noteText: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#555",
     textAlign: "center",
     paddingHorizontal: 10,

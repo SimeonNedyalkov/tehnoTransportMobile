@@ -137,6 +137,7 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.companyName}>Tehno Transport</Text>
       <Text style={styles.header}>Due Soon Customers</Text>
       <View style={styles.customerRow}>
         <Checkbox
@@ -174,6 +175,19 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingHorizontal: 16,
     backgroundColor: "#f5f5f5",
+  },
+  companyName: {
+    fontFamily: "Roboto",
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#007bff",
+    textAlign: "center",
+    marginBottom: 10,
+    textTransform: "uppercase",
+    letterSpacing: 1.5,
+    textShadowColor: "rgba(0, 0, 0, 0.2)",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 3,
   },
   header: {
     fontSize: 24,
