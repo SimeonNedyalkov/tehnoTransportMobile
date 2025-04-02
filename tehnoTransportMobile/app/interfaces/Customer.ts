@@ -4,7 +4,7 @@ interface Customer {
   id: string;
   brand: string | "Unknown Brand";
   createdAt?: Timestamp | Date;
-  dateOfTehnoTest: Timestamp | Date;
+  dateOfLastTehnoTest: Timestamp | Date;
   firstName: string;
   model: string;
   phone: string;

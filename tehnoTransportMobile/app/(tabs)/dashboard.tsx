@@ -82,7 +82,7 @@ export default function DashboardScreen() {
 
           const personalizedMessage = newMessage
             .replace("[regNumber]", customer.regNumber)
-            .replace("[date]", customer.dateOfTehnoTest.toString());
+            .replace("[date]", customer.dateOfLastTehnoTest.toString());
           const { result } = await SMS.sendSMSAsync(
             customer.phone,
             personalizedMessage
