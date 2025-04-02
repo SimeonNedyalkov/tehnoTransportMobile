@@ -15,6 +15,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import User from "./interfaces/User";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +45,8 @@ const LoginScreen = () => {
 
       // Store user data securely
       await AsyncStorage.setItem("user", JSON.stringify(data));
-
+      const idToken = data.idToken;
+      await AsyncStorage.setItem("idToken", idToken);
       console.log("Login successful:", data);
       router.replace("/(tabs)/dashboard");
     } catch (error) {

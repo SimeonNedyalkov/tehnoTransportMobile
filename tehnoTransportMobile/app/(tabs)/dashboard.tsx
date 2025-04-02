@@ -13,7 +13,7 @@ import { useLocalSearchParams } from "expo-router";
 import Message from "../interfaces/Message";
 import { Timestamp } from "firebase/firestore";
 import { NativeModules } from "react-native";
-
+import updateCustomer from "../API/API";
 const { SmsSender } = NativeModules;
 import { MaterialIcons } from "@expo/vector-icons";
 import useGetCustomer from "../hooks/useGetCustomer";
@@ -27,12 +27,22 @@ export default function DashboardScreen() {
     "Здравейте, \nна [date] Ви изтича Годишният Технически Преглед на кола с регистрационен номер : '[regNumber]', моля запишете си час преди датата на изтичане на прегледа за да използвате нашата отстъпка от 5%"
   );
   // const { message } = useLocalSearchParams();
-  const IPDBURL = "http://192.168.1.6:3000/due-soon-customers";
+  const IPDBURL = "http://192.168.1.6:3000/customers";
   const IPMessageURL = "http://192.168.1.6:3000/message/";
 
   useEffect(() => {
     if (DATA.length !== customers.length) {
-      setCustomers(DATA);
+      const dataArr = [];
+      for (let i = 0; i < DATA.length; i++) {
+        const customer = DATA[i];
+        if (customer.isSmsSent === false) {
+          if (customer.isSentToApp === true) {
+            dataArr.push(customer);
+          }
+        }
+      }
+      setCustomers(dataArr);
+      // setCustomers(DATA);
     }
   }, [DATA]);
 
@@ -82,13 +92,22 @@ export default function DashboardScreen() {
 
           const personalizedMessage = newMessage
             .replace("[regNumber]", customer.regNumber)
-            .replace("[date]", customer.dateOfLastTehnoTest.toString());
+            .replace("[date]", customer.dateOfNextTehnoTest.toString());
           const { result } = await SMS.sendSMSAsync(
             customer.phone,
             personalizedMessage
           );
           if (result === "sent") {
-            console.log(`Message sent to ${customer.phone}`);
+            console.log("great");
+            const customerToUpdate = { ...customer, isSmsSent: true };
+            console.log(customerToUpdate);
+            const response = await updateCustomer(
+              customer.id,
+              customerToUpdate
+            );
+            if (response.ok) {
+              console.log(`Message sent to ${customer.phone}`);
+            }
           } else {
             console.log(`Failed to send message to ${customer.phone}`);
           }

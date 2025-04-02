@@ -4,7 +4,7 @@ import { Timestamp } from "firebase/firestore";
 
 export default function useGetCustomer(refreshSignal: boolean) {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const DBURL = "http://192.168.1.6:3000/due-soon-customers";
+  const DBURL = "http://192.168.1.6:3000/customers";
 
   useEffect(() => {
     const getCustomer = async () => {
