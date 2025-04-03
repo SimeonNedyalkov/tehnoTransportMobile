@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Checkbox } from "react-native-paper";
 import Customer from "../interfaces/Customer";
@@ -17,6 +18,10 @@ import updateCustomer from "../API/API";
 const { SmsSender } = NativeModules;
 import { MaterialIcons } from "@expo/vector-icons";
 import useGetCustomer from "../hooks/useGetCustomer";
+import timestampToDateStringConverter from "../tools/timestampConverter";
+import * as IntentLauncher from "expo-intent-launcher";
+
+import { Linking } from "react-native";
 export default function DashboardScreen() {
   const [refreshSignal, setRefreshSignal] = useState(false);
   const DATA = useGetCustomer(refreshSignal);
@@ -29,7 +34,6 @@ export default function DashboardScreen() {
   // const { message } = useLocalSearchParams();
   const IPDBURL = "http://192.168.1.6:3000/customers";
   const IPMessageURL = "http://192.168.1.6:3000/message/";
-
   useEffect(() => {
     if (DATA.length !== customers.length) {
       const dataArr = [];
@@ -76,6 +80,40 @@ export default function DashboardScreen() {
     }
     setSelectAll(!selectAll);
   };
+  const askIfMessageIsSent = async (customerToUpdate: Customer) => {
+    try {
+      await updateCustomer(customerToUpdate.id, customerToUpdate);
+      handleRefresh();
+    } catch (error) {
+      console.error(`Error while updating customer: ${error}`);
+    }
+  };
+
+  const confirmMessageSent = (customer: Customer) => {
+    // Show a confirmation dialog
+    Alert.alert(
+      "Confirm SMS Sent",
+      `Did you successfully send the message to ${customer.phone}?`,
+      [
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              await askIfMessageIsSent({ ...customer, isSmsSent: true });
+              console.log(`Customer ${customer.id} marked as SMS sent.`);
+              // handleRefresh(); // Refresh customer list
+            } catch (error) {
+              console.error("Failed to update customer:", error);
+            }
+          },
+        },
+        {
+          text: "No",
+          style: "cancel",
+        },
+      ]
+    );
+  };
 
   const sendSms = async () => {
     if (selectedCustomers.length !== 0) {
@@ -97,23 +135,15 @@ export default function DashboardScreen() {
             customer.phone,
             personalizedMessage
           );
-          if (result === "sent") {
-            console.log("great");
-            const customerToUpdate = { ...customer, isSmsSent: true };
-            console.log(customerToUpdate);
-            const response = await updateCustomer(
-              customer.id,
-              customerToUpdate
-            );
-            if (response.ok) {
-              console.log(`Message sent to ${customer.phone}`);
-            }
-          } else {
-            console.log(`Failed to send message to ${customer.phone}`);
-          }
+          setTimeout(() => {
+            confirmMessageSent(customer);
+          }, 1000);
+          // console.log("great");
+          // const customerToUpdate = { ...customer, isSmsSent: true };
+          // console.log(customerToUpdate);
         }
 
-        alert("Messages sent successfully to selected customers");
+        // alert("Messages sent successfully to selected customers");
       } else {
         alert("Misfortune... there's no SMS available on this device");
       }
@@ -121,19 +151,6 @@ export default function DashboardScreen() {
     setSelectedCustomers([]);
     setSelectAll(false);
   };
-  // const sendSms = (phoneNumbers, message) => {
-  //   const phonesArray = selectedCustomers.map((customer) =>
-  //     String(customer.phone)
-  //   );
-  //   SmsSender.sendBulkSms(phoneNumbers, message,
-  //     (successMessage:any) => {
-  //       console.log(successMessage); // "SMS sent successfully"
-  //     },
-  //     (errorMessage:any) => {
-  //       console.error(errorMessage); // Error sending SMS
-  //     }
-  //   );
-  // };
 
   const renderCustomer = ({ item }: { item: Customer }) => {
     return (

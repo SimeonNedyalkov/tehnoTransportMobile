@@ -45,8 +45,8 @@ const LoginScreen = () => {
 
       // Store user data securely
       await AsyncStorage.setItem("user", JSON.stringify(data));
-      const idToken = data.idToken;
-      await AsyncStorage.setItem("idToken", idToken);
+      const authToken = data.idToken;
+      await AsyncStorage.setItem("authToken", authToken);
       console.log("Login successful:", data);
       router.replace("/(tabs)/dashboard");
     } catch (error) {
