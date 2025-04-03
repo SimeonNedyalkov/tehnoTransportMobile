@@ -22,6 +22,7 @@ import timestampToDateStringConverter from "../tools/timestampConverter";
 import * as IntentLauncher from "expo-intent-launcher";
 
 import { Linking } from "react-native";
+import createSMS from "../API/APISMS";
 export default function DashboardScreen() {
   const [refreshSignal, setRefreshSignal] = useState(false);
   const DATA = useGetCustomer(refreshSignal);
@@ -83,6 +84,14 @@ export default function DashboardScreen() {
   const askIfMessageIsSent = async (customerToUpdate: Customer) => {
     try {
       await updateCustomer(customerToUpdate.id, customerToUpdate);
+      await createSMS({
+        customerID: customerToUpdate.id,
+        isSent: true,
+        message: "message",
+        receiverName: customerToUpdate.firstName,
+        response: "success",
+        senderName: "sami",
+      });
       handleRefresh();
     } catch (error) {
       console.error(`Error while updating customer: ${error}`);
