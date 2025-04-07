@@ -20,10 +20,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import useGetCustomer from "../hooks/useGetCustomer";
 import timestampToDateStringConverter from "../tools/timestampConverter";
 import * as IntentLauncher from "expo-intent-launcher";
-
+import { useUser } from "../tools/UserContext";
 import { Linking } from "react-native";
 import createSMS from "../API/APISMS";
 export default function DashboardScreen() {
+  const { user, loading } = useUser();
   const [refreshSignal, setRefreshSignal] = useState(false);
   const DATA = useGetCustomer(refreshSignal);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -81,16 +82,19 @@ export default function DashboardScreen() {
     }
     setSelectAll(!selectAll);
   };
-  const askIfMessageIsSent = async (customerToUpdate: Customer) => {
+  const askIfMessageIsSent = async (
+    customerToUpdate: Customer,
+    personalizedMessage: string
+  ) => {
     try {
       await updateCustomer(customerToUpdate.id, customerToUpdate);
       await createSMS({
         customerID: customerToUpdate.id,
         isSent: true,
-        message: "message",
+        message: personalizedMessage,
         receiverName: customerToUpdate.firstName,
         response: "success",
-        senderName: "sami",
+        senderName: user.displayName || "user",
       });
       handleRefresh();
     } catch (error) {
@@ -98,7 +102,10 @@ export default function DashboardScreen() {
     }
   };
 
-  const confirmMessageSent = (customer: Customer) => {
+  const confirmMessageSent = (
+    customer: Customer,
+    personalizedMessage: string
+  ) => {
     // Show a confirmation dialog
     Alert.alert(
       "Confirm SMS Sent",
@@ -108,7 +115,10 @@ export default function DashboardScreen() {
           text: "Yes",
           onPress: async () => {
             try {
-              await askIfMessageIsSent({ ...customer, isSmsSent: true });
+              await askIfMessageIsSent(
+                { ...customer, isSmsSent: true },
+                personalizedMessage
+              );
               console.log(`Customer ${customer.id} marked as SMS sent.`);
               // handleRefresh(); // Refresh customer list
             } catch (error) {
@@ -145,7 +155,7 @@ export default function DashboardScreen() {
             personalizedMessage
           );
           setTimeout(() => {
-            confirmMessageSent(customer);
+            confirmMessageSent(customer, personalizedMessage);
           }, 1000);
           // console.log("great");
           // const customerToUpdate = { ...customer, isSmsSent: true };
