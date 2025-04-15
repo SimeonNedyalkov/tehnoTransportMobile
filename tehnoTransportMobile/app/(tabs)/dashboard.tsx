@@ -10,19 +10,12 @@ import {
 import { Checkbox } from "react-native-paper";
 import Customer from "../interfaces/Customer";
 import * as SMS from "expo-sms";
-import { useLocalSearchParams } from "expo-router";
-import Message from "../interfaces/Message";
-import { Timestamp } from "firebase/firestore";
-import { NativeModules } from "react-native";
 import updateCustomer from "../API/API";
-const { SmsSender } = NativeModules;
 import { MaterialIcons } from "@expo/vector-icons";
 import useGetCustomer from "../hooks/useGetCustomer";
-import timestampToDateStringConverter from "../tools/timestampConverter";
-import * as IntentLauncher from "expo-intent-launcher";
 import { useUser } from "../tools/UserContext";
-import { Linking } from "react-native";
 import createSMS from "../API/APISMS";
+import Message from "../interfaces/Message";
 export default function DashboardScreen() {
   const { user, loading } = useUser();
   const [refreshSignal, setRefreshSignal] = useState(false);
@@ -30,12 +23,10 @@ export default function DashboardScreen() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<Customer[]>([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [newMessage, setNewMessage] = useState(
-    "Здравейте, \nна [date] Ви изтича Годишният Технически Преглед на кола с регистрационен номер : '[regNumber]', моля запишете си час преди датата на изтичане на прегледа за да използвате нашата отстъпка от 5%"
-  );
+  const [message, setMessage] = useState<Message>({ id: "", message: "" });
   // const { message } = useLocalSearchParams();
   const IPDBURL = "http://192.168.1.6:3000/customers";
-  const IPMessageURL = "http://192.168.1.6:3000/message/";
+  const IPMESSAGEURL = "http://192.168.1.6:3000/message/";
   useEffect(() => {
     if (DATA.length !== customers.length) {
       const dataArr = [];
@@ -58,11 +49,28 @@ export default function DashboardScreen() {
     setRefreshSignal((prev) => !prev);
   };
 
-  // useEffect(() => {
-  //   if (message.length != 0) {
-  //     setNewMessage(JSON.stringify(message));
-  //   }
-  // }, [message]);
+  useEffect(() => {
+    async function getMessage() {
+      try {
+        const response = await fetch(IPMESSAGEURL, {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await response.json();
+        console.log("Fetched data from /message:", data);
+
+        if (Array.isArray(data) && data.length > 0) {
+          console.log("First message object:", data[0]);
+          setMessage(data[0]);
+        } else {
+          console.warn("Message array is empty or not in expected format");
+        }
+      } catch (error) {
+        console.error("Error fetching message:", error);
+      }
+    }
+    getMessage();
+  }, [refreshSignal]);
 
   const handleSelectCustomer = (customer: Customer) => {
     setSelectedCustomers((prev) => {
@@ -147,7 +155,7 @@ export default function DashboardScreen() {
         for (let customer of selectedCustomers) {
           // Replace placeholders with actual customer data
 
-          const personalizedMessage = newMessage
+          const personalizedMessage = message.message
             .replace("[regNumber]", customer.regNumber)
             .replace("[date]", customer.dateOfNextTehnoTest.toString());
           const { result } = await SMS.sendSMSAsync(
