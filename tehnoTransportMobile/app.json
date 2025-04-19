@@ -1,20 +1,23 @@
 {
   "expo": {
-    "name": "tehnoTransportMobile",
+    "name": "Tehno Transport",
     "slug": "tehnoTransportMobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.PNG",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "runtimeVersion": {
+      "policy": "1.0"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.acinarret.tehnoTransportMobile"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.PNG",
         "backgroundColor": "#ffffff"
       },
       "package": "com.acinarret.tehnoTransportMobile"
@@ -40,6 +43,7 @@
     "experiments": {
       "typedRoutes": true
     },
+
     "extra": {
       "router": {
         "origin": false

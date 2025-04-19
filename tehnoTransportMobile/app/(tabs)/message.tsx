@@ -102,7 +102,7 @@ export default function MessageScreen() {
 
           <View style={styles.previewContainer}>
             <Text style={styles.previewTitle}>📩 Сегашното съобщение:</Text>
-            <Text style={styles.previewText}>{message.message}</Text>{" "}
+            <Text style={styles.previewText}>{message.message}</Text>
           </View>
 
           <View style={styles.warningContainer}>
