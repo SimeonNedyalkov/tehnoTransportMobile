@@ -55,10 +55,8 @@ export default function DashboardScreen() {
           credentials: "include",
         });
         const data = await response.json();
-        console.log("Fetched data from /message:", data);
 
         if (Array.isArray(data) && data.length > 0) {
-          console.log("First message object:", data[0]);
           setMessage(data[0]);
         } else {
           console.warn("Message array is empty or not in expected format");
