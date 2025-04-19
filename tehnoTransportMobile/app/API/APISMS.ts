@@ -12,9 +12,8 @@ const getAuthToken = async (): Promise<string | null> => {
 };
 
 const createSMS = async (sms: SMS) => {
-  const DBURL = "http://192.168.1.6:3000/sms-logs";
+  const DBURL = "https://tehno-transport-b.onrender.com/sms-logs";
   const authToken = await getAuthToken();
-  console.log(authToken);
   if (!authToken) {
     console.error("No auth token found");
     return;
@@ -26,7 +25,6 @@ const createSMS = async (sms: SMS) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      //   credentials: "include",
       body: JSON.stringify(sms),
     });
 

@@ -1,31 +1,12 @@
-import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useUser } from "../tools/UserContext";
-const USERURL = "http://192.168.1.6:3000/user/getUser";
-const LOGOUTURL = "http://192.168.1.6:3000/user/logout";
+const LOGOUTURL = "https://tehno-transport-b.onrender.com/user/logout";
 import { router } from "expo-router";
 
 export default function Profile() {
   const { user, loading } = useUser();
   console.log(user);
-  // const [user, setUser] = useState<User | null>(null);
-
-  // useEffect(() => {
-  //   const getUser = async () => {
-  //     let response = await fetch(USERURL, {
-  //       method: "GET",
-  //       credentials: "include",
-  //     });
-  //     const data = await response.json();
-  //     const photoURL =
-  //       "http://192.168.1.6:3000/" +
-  //       data.photoURL.split("http://localhost:3000/")[1];
-  //     data.photoURL = photoURL;
-  //     setUser(data);
-  //   };
-  //   getUser();
-  // }, []);
 
   async function logout() {
     try {

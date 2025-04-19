@@ -5,7 +5,7 @@ import daysRemainingAndStatusCalc from "../tools/daysRemainingAndStatusCalc";
 
 export default function useGetCustomer(refreshSignal: boolean) {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const DBURL = "http://192.168.1.6:3000/customers";
+  const DBURL = "https://tehno-transport-b.onrender.com/customers";
 
   useEffect(() => {
     const getCustomer = async () => {

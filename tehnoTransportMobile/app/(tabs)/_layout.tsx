@@ -2,16 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Stack, Tabs } from "expo-router";
 import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from "@expo/vector-icons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Entypo from "@expo/vector-icons/Entypo";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { UserProvider } from "../tools/UserContext";
 export default function _Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Check login status
   useEffect(() => {
     const checkAuth = async () => {
       const user = await AsyncStorage.getItem("user");
@@ -21,9 +18,6 @@ export default function _Layout() {
     checkAuth();
   }, [isLoggedIn]);
 
-  console.log(isLoggedIn);
-
-  // Show a loading spinner while checking auth status
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -32,19 +26,14 @@ export default function _Layout() {
     );
   }
 
-  // If NOT logged in, show only the login screen
   if (!isLoggedIn) {
     return (
       <Stack>
-        <Stack.Screen
-          name="index" // Login Page
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
     );
   }
 
-  // If logged in, show the bottom tab navigation
   return (
     <UserProvider>
       <Tabs>
@@ -81,11 +70,10 @@ export default function _Layout() {
             ),
           }}
         />
-        {/* Explicitly hide the index screen from Tabs */}
         <Tabs.Screen
           name="index"
           options={{
-            href: null, // This hides it from the bottom tab navigation
+            href: null,
             headerShown: false,
           }}
         />

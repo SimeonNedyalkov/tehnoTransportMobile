@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-const USERURL = "http://192.168.1.6:3000/user/getUser";
+const USERURL = "https://tehno-transport-b.onrender.com/user/getUser";
 
 export const UserContext = createContext<any>(null);
 interface User {
@@ -24,8 +24,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (!res.ok) throw new Error("User not authenticated");
         const data = await res.json();
         const photoURL =
-          "http://192.168.1.6:3000/" +
-          data.photoURL.split("http://localhost:3000/")[1];
+          "https://tehno-transport-b.onrender.com/" +
+          data.photoURL.split("https://tehno-transport-b.onrender.com/")[1];
         data.photoURL = photoURL;
         setUser(data);
       } catch (err) {

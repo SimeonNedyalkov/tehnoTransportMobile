@@ -11,17 +11,16 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Message from "../interfaces/Message";
 
-const IPMESSAGEURL = "http://192.168.1.6:3000/message";
+const IPMESSAGEURL = "https://tehno-transport-b.onrender.com/message";
 
 export default function MessageScreen() {
-  const [message, setMessage] = useState<Message>({ id: "", message: "" }); // Original message
+  const [message, setMessage] = useState<Message>({ id: "", message: "" });
   const [newMessage, setNewMessage] = useState<Message>({
     id: "",
     message: "",
-  }); // User's edited message
+  });
   const router = useRouter();
 
-  // Fetch the message from the API
   useEffect(() => {
     async function getMessage() {
       try {
@@ -30,12 +29,10 @@ export default function MessageScreen() {
           credentials: "include",
         });
         const data = await response.json();
-        console.log("Fetched data from /message:", data);
 
         if (Array.isArray(data) && data.length > 0) {
-          console.log("First message object:", data[0]);
-          setMessage(data[0]); // Set original message for preview
-          setNewMessage(data[0]); // Set initial new message
+          setMessage(data[0]);
+          setNewMessage(data[0]);
         } else {
           console.warn("Message array is empty or not in expected format");
         }
@@ -46,7 +43,6 @@ export default function MessageScreen() {
     getMessage();
   }, []);
 
-  // Save the updated message
   async function saveMessage() {
     if (!message.id || typeof message.id !== "string") {
       alert("Message ID is invalid or missing!");
@@ -61,7 +57,7 @@ export default function MessageScreen() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ message: newMessage.message }), // Send the new message
+        body: JSON.stringify({ message: newMessage.message }),
       });
 
       const text = await response.text();
@@ -95,8 +91,8 @@ export default function MessageScreen() {
             style={styles.input}
             onChangeText={(text) =>
               setNewMessage({ ...newMessage, message: text })
-            } // Update new message state
-            value={newMessage.message} // Bind input to newMessage
+            }
+            value={newMessage.message}
             placeholder="Type here..."
             placeholderTextColor="#888"
             keyboardType="default"
@@ -107,7 +103,6 @@ export default function MessageScreen() {
           <View style={styles.previewContainer}>
             <Text style={styles.previewTitle}>📩 Сегашното съобщение:</Text>
             <Text style={styles.previewText}>{message.message}</Text>{" "}
-            {/* Display old message */}
           </View>
 
           <View style={styles.warningContainer}>

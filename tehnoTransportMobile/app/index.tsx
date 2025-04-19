@@ -13,15 +13,11 @@ import {
 } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import User from "./interfaces/User";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const navigation = useNavigation();
-  const SIMULATORLOGINURL = "http://10.0.2.2:3000/user/login";
-  const IPLOGINURL = "http://192.168.1.6:3000/user/login";
+  const IPLOGINURL = "https://tehno-transport-b.onrender.com/user/login";
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [errors, setErrors] = useState(false);
 
@@ -37,13 +33,11 @@ const LoginScreen = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json(); // Extract response JSON
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.message || "Invalid credentials");
       }
-
-      // Store user data securely
       await AsyncStorage.setItem("user", JSON.stringify(data));
       const authToken = data.idToken;
       await AsyncStorage.setItem("authToken", authToken);

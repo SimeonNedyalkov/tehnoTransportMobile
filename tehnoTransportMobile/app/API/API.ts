@@ -12,9 +12,8 @@ const getAuthToken = async (): Promise<string | null> => {
 };
 
 const updateCustomer = async (id: string, customer: Customer) => {
-  const DBURL = "http://192.168.1.6:3000/customers/";
+  const DBURL = "https://tehno-transport-b.onrender.com/customers/";
   const authToken = await getAuthToken();
-  console.log(authToken);
   if (!authToken) {
     console.error("No auth token found");
     return;
@@ -26,7 +25,6 @@ const updateCustomer = async (id: string, customer: Customer) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      // credentials: "include",
       body: JSON.stringify(customer),
     });
     if (!response.ok && customer.brand != "") {

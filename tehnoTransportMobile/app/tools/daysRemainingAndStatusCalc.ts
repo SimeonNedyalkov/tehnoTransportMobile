@@ -2,7 +2,6 @@ import { Timestamp } from "firebase/firestore";
 
 const calculateDaysRemaining = (testDate: Timestamp) => {
   const newTestDate = new Date(testDate.seconds * 1000);
-  // newTestDate.setFullYear(newTestDate.getFullYear() + 1);
   const nextTehnoDate = newTestDate.toISOString().split("T")[0];
 
   const today = new Date();

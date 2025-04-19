@@ -25,8 +25,8 @@ export default function DashboardScreen() {
   const [selectAll, setSelectAll] = useState(false);
   const [message, setMessage] = useState<Message>({ id: "", message: "" });
   // const { message } = useLocalSearchParams();
-  const IPDBURL = "http://192.168.1.6:3000/customers";
-  const IPMESSAGEURL = "http://192.168.1.6:3000/message/";
+  const IPDBURL = "https://tehno-transport-b.onrender.com/customers";
+  const IPMESSAGEURL = "https://tehno-transport-b.onrender.com/message/";
   useEffect(() => {
     if (DATA.length !== customers.length) {
       const dataArr = [];
@@ -114,7 +114,6 @@ export default function DashboardScreen() {
     customer: Customer,
     personalizedMessage: string
   ) => {
-    // Show a confirmation dialog
     Alert.alert(
       "Confirm SMS Sent",
       `Did you successfully send the message to ${customer.phone}?`,
@@ -128,7 +127,6 @@ export default function DashboardScreen() {
                 personalizedMessage
               );
               console.log(`Customer ${customer.id} marked as SMS sent.`);
-              // handleRefresh(); // Refresh customer list
             } catch (error) {
               console.error("Failed to update customer:", error);
             }
@@ -151,10 +149,7 @@ export default function DashboardScreen() {
       if (isAvailable) {
         alert("SMS is available on this device");
 
-        // Loop through each phone number and send SMS individually
         for (let customer of selectedCustomers) {
-          // Replace placeholders with actual customer data
-
           const personalizedMessage = message.message
             .replace("[regNumber]", customer.regNumber)
             .replace("[date]", customer.dateOfNextTehnoTest.toString());
@@ -165,12 +160,7 @@ export default function DashboardScreen() {
           setTimeout(() => {
             confirmMessageSent(customer, personalizedMessage);
           }, 1000);
-          // console.log("great");
-          // const customerToUpdate = { ...customer, isSmsSent: true };
-          // console.log(customerToUpdate);
         }
-
-        // alert("Messages sent successfully to selected customers");
       } else {
         alert("Misfortune... there's no SMS available on this device");
       }
