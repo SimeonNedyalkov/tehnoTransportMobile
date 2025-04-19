@@ -15,6 +15,11 @@
       "developmentClient": false,
       "distribution": "store",
       "autoIncrement": true
+    },
+    "apk": {
+      "distribution": "internal",
+      "developmentClient": false,
+      "autoIncrement": true
     }
   },
   "submit": {
