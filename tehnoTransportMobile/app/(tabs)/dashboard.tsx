@@ -24,8 +24,6 @@ export default function DashboardScreen() {
   const [selectedCustomers, setSelectedCustomers] = useState<Customer[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [message, setMessage] = useState<Message>({ id: "", message: "" });
-  // const { message } = useLocalSearchParams();
-  const IPDBURL = "https://tehno-transport-b.onrender.com/customers";
   const IPMESSAGEURL = "https://tehno-transport-b.onrender.com/message/";
   useEffect(() => {
     if (DATA.length !== customers.length) {
