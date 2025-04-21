@@ -23,10 +23,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         });
         if (!res.ok) throw new Error("User not authenticated");
         const data = await res.json();
-        const photoURL =
-          "https://tehno-transport-b.onrender.com/" +
-          data.photoURL.split("https://tehno-transport-b.onrender.com/")[1];
-        data.photoURL = photoURL;
         setUser(data);
       } catch (err) {
         console.log("User fetch error:", err);

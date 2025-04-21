@@ -110,30 +110,35 @@ export default function DashboardScreen() {
     customer: Customer,
     personalizedMessage: string
   ) => {
-    Alert.alert(
-      "Confirm SMS Sent",
-      `Did you successfully send the message to ${customer.phone}?`,
-      [
-        {
-          text: "Yes",
-          onPress: async () => {
-            try {
-              await askIfMessageIsSent(
-                { ...customer, isSmsSent: true },
-                personalizedMessage
-              );
-              console.log(`Customer ${customer.id} marked as SMS sent.`);
-            } catch (error) {
-              console.error("Failed to update customer:", error);
-            }
+    return new Promise((resolve, reject) => {
+      Alert.alert(
+        "Confirm SMS Sent",
+        `Did you successfully send the message to ${customer.phone}?`,
+        [
+          {
+            text: "Yes",
+            onPress: async () => {
+              try {
+                await askIfMessageIsSent(
+                  { ...customer, isSmsSent: true },
+                  personalizedMessage
+                );
+                resolve("success");
+              } catch (error) {
+                reject("Failed to update customer.");
+              }
+            },
           },
-        },
-        {
-          text: "No",
-          style: "cancel",
-        },
-      ]
-    );
+          {
+            text: "No",
+            style: "cancel",
+            onPress: () => {
+              resolve("failed");
+            },
+          },
+        ]
+      );
+    });
   };
 
   const sendSms = async () => {
@@ -153,8 +158,17 @@ export default function DashboardScreen() {
             customer.phone,
             personalizedMessage
           );
-          setTimeout(() => {
-            confirmMessageSent(customer, personalizedMessage);
+          setTimeout(async () => {
+            const confirmation = await confirmMessageSent(
+              customer,
+              personalizedMessage
+            );
+
+            if (confirmation === "success") {
+              console.log(`Customer ${customer.id} marked as SMS sent.`);
+            } else {
+              console.log(`SMS failed to send to ${customer.phone}`);
+            }
           }, 1000);
         }
       } else {
