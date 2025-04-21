@@ -169,7 +169,7 @@ export default function DashboardScreen() {
             } else {
               console.log(`SMS failed to send to ${customer.phone}`);
             }
-          }, 1000);
+          }, 4000);
         }
       } else {
         alert("Misfortune... there's no SMS available on this device");
